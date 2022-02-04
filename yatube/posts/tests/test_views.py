@@ -161,7 +161,6 @@ class PostPagesTests(TestCase):
         response = self.authorized_client.get(reverse('posts:index'))
         self.assertNotEqual(response.content, old_content)
 
-
     def test_authorized_user_can_follow_and_unfollow(self):
         author = self.user_2
         self.authorized_client.get(
@@ -170,16 +169,21 @@ class PostPagesTests(TestCase):
                 kwargs={'username': author.username}
             )
         )
-        self.assertTrue(Follow.objects.filter(author=self.user_2, user=self.user_1).exists())
+        self.assertTrue(Follow.objects.filter(
+            author=self.user_2,
+            user=self.user_1
+        ).exists())
         self.authorized_client.get(
             reverse(
                 'posts:profile_unfollow',
                 kwargs={'username': author.username}
             )
         )
-        self.assertFalse(Follow.objects.filter(author=self.user_2, user=self.user_1).exists())
+        self.assertFalse(Follow.objects.filter(
+            author=self.user_2,
+            user=self.user_1
+        ).exists())
 
-    
     def test_follow_index(self):
         another_client = Client()
         another_client.force_login(self.user_2)

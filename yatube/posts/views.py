@@ -1,6 +1,3 @@
-from errno import EEXIST
-from genericpath import exists
-from urllib import response
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import PostForm, CommentForm
 from .models import Post, Group, Follow
@@ -52,7 +49,10 @@ def profile(request, username):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    if request.user.is_authenticated and Follow.objects.filter(user=request.user, author=author).exists():
+    if request.user.is_authenticated and Follow.objects.filter(
+        user=request.user,
+        author=author
+    ).exists():
         following = True
     else:
         following = False
@@ -149,12 +149,14 @@ def follow_index(request):
     return render(request, 'posts/follow.html', context)
 
 
-
 @login_required
 def profile_follow(request, username):
     user = request.user
     author = User.objects.get(username=username)
-    if author != user and not Follow.objects.filter(user=user, author=author).exists():
+    if author != user and not Follow.objects.filter(
+        user=user,
+        author=author
+    ).exists():
         Follow.objects.create(user=user, author=author)
     return redirect('posts:profile', username=author)
 
