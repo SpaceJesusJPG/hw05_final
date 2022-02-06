@@ -13,7 +13,7 @@ def index(request):
     template = "posts/index.html"
     title = "Yatube"
     posts = Post.objects.all().order_by("-pub_date")
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, POST_CNT)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     context = {
@@ -30,7 +30,7 @@ def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.all().order_by("-pub_date")
     descripction = group.description
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, POST_CNT)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     context = {
@@ -46,16 +46,13 @@ def group_posts(request, slug):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     posts = author.posts.all().order_by("-pub_date")
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, POST_CNT)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    if request.user.is_authenticated and Follow.objects.filter(
+    following = request.user.is_authenticated and Follow.objects.filter(
         user=request.user,
         author=author
-    ).exists():
-        following = True
-    else:
-        following = False
+    ).exists()
     context = {
         "author": author,
         "posts": posts,
@@ -140,7 +137,7 @@ def follow_index(request):
     posts = []
     for follow in user_following:
         posts += follow.author.posts.all()
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, POST_CNT)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     context = {
