@@ -7,7 +7,7 @@ def page_not_found(request, exception):
         request,
         'core/404.html',
         {'path': request.path},
-        HTTPStatus.NOT_FOUND
+        status=HTTPStatus.NOT_FOUND
     )
 
 
@@ -19,5 +19,5 @@ def server_error(request):
     return render(
         request,
         'core/500.html',
-        HTTPStatus.INTERNAL_SERVER_ERROR
+        status=HTTPStatus.INTERNAL_SERVER_ERROR
     )
