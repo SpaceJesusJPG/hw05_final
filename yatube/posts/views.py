@@ -21,6 +21,7 @@ def index(request):
         "text": "Последние обновления на сайте",
         "posts": posts,
         "page_obj": page_obj,
+        "index": True
     }
     return render(request, template, context)
 
@@ -141,7 +142,8 @@ def follow_index(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     context = {
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'follow': True
     }
     return render(request, 'posts/follow.html', context)
 
